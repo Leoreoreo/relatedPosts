@@ -1,8 +1,6 @@
 import json
 import openai
 
-openai.api_key = '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'
-
 def read_target_strings(person_id):
     file_path = f"./persona{person_id}.json"
 
@@ -22,7 +20,7 @@ def direct_match(key_word, string_list):
         )
     ]
     return filtered_list
-openai.api_key = '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'
+
 
 def determine_relationship(key_word, sentence):
 
