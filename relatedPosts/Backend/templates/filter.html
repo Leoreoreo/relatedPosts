@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block title %}
+Filter
+{% endblock %}
+{% block content %}
+Your name "{{ user.username }}" has {{ user.username|length }} chars
+Current time: "{{mytime|dformat}}"
+{% endblock %}
