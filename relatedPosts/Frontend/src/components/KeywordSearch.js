@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
-import useFetch from './useFetch';
+
 
 const KeywordSearch = (props) => {
   const [userInput, setUserInput] = useState('');
+  const [selectedNumber, setSelectedNumber] = useState(1); // Default value
   const [flaskOutput, setFlaskOutput] = useState('');
 
   const handleInputChange = (e) => {
     setUserInput(e.target.value);
   };
 
+  const handleNumberChange = (e) => {
+    setSelectedNumber(parseInt(e.target.value, 10));
+  };
 
   const handleSendRequest = async () => {
     try {
-      const response = await fetch('http://localhost:5000/process_input', {
+      const response = await fetch(props.url + '/KeywordSearch/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userInput }),
+        body: JSON.stringify({
+          userInput,
+          selectedNumber,
+        }),
       });
 
       if (!response.ok) {
@@ -31,19 +38,26 @@ const KeywordSearch = (props) => {
     }
   };
 
-
   return (
     <div>
-    <div>
-      <label>Type something:</label>
-      <input type="text" value={userInput} onChange={handleInputChange} />
-      <button onClick={handleSendRequest}>Send</button>
+      <div>
+        <label>PID:</label>
+        <select value={selectedNumber} onChange={handleNumberChange}>
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+        </select>
+      </div>
+      <div>
+        <label>Keyword:</label>
+        <input type="text" value={userInput} onChange={handleInputChange} />
+        <button onClick={handleSendRequest}>Send</button>
+      </div>
+      <div>
+        <h2>Flask Output:</h2>
+        <p>{flaskOutput}</p>
+      </div>
     </div>
-    <div>
-      <h2>Flask Output:</h2>
-      <p>{flaskOutput}</p>
-    </div>
-  </div>
   );
 };
 

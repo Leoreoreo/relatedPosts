@@ -65,7 +65,9 @@ body {
   overflow-y: auto; 
 }
 
-
+select {
+  color: #0056b3; 
+}
 input {
   margin-top: 10px;
   margin-bottom: 10px;
