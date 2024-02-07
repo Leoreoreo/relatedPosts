@@ -78,6 +78,7 @@ def search_for_existed_search(person_id, key_word):
     passage_embedding = model.encode(keyword)
     if pid == person_id and util.dot_score(query_embedding, passage_embedding) > THRESHOLD:
       res.append([pid, keyword])
+  print(res)
   return res
 
 def read_existed_search(person_id, key_word):
@@ -87,37 +88,29 @@ def read_existed_search(person_id, key_word):
   
 def relevant_search(person_id, key_word):
   print(f"searching person{person_id} for {key_word}:")
-  '''
-  existed_search = search_for_existed_search(person_id, key_word)
-  if len(existed_search) > 0:
-    print('Similar searches found:')
-    for i, s in enumerate(existed_search):
-      print(f" {i+1}: pid: {s[0]}, keyword: {s[1]}")
-    print('Do you want to view an existed search instead?')
-    user_input = int(input("If no, type 0; else, type index"))
-    if user_input > 0:
-      return read_existed_search(person_id, existed_search[user_input-1][1])
-    '''
+  
   return SentenceTransformer_match(person_id, key_word)
 
 def decode_dic(dic, person_id):
   file_path = f"{PERSONAS_PATH}/persona{person_id}.json"
+  res = []
   with open(file_path, 'r') as json_file:
     data = json.load(json_file)['data']
   
     for bh in data['browsingHistoryList']:
       if bh['id'] in dic['browsingHistoryList']:
-        print(['browsingHistoryList', bh['id']], bh['title'])
+        res.append(['browsingHistoryList', bh['id'], bh['title']])
 
     for pc in data['facebookPostsList']:
       if pc['id'] in dic['facebookPostsList']:
-        print(['facebookPostsList', pc['id']], pc['content'])
+        res.append(['facebookPostsList', pc['id'], pc['content']])
 
     for sch in data['schedule']:
       if sch['id'] in dic['schedule']:
-        print(['schedule', sch['id']], sch['address'])
+        res.append(['schedule', sch['id'], sch['address']])
 
     for info in data.keys():
       if isinstance(data[info], str):
         if info in dic['info']:
-          print([info], data[info])
+          res.append(['profile', info, data[info]])
+  return res
