@@ -18,6 +18,7 @@ const KeywordSearch = (props) => {
   const handleSendRequest = async () => {
     try {
       // Clear existing search results
+      setSimilarSearches([]);
       setFlaskOutput([]);
       const response = await axios.post(props.url + '/KeywordSearch/', {
         userInput,
@@ -105,11 +106,17 @@ const KeywordSearch = (props) => {
         <br></br>
         <h2>Search Results:</h2>
         <div className="text-container">
-          {flaskOutput && flaskOutput.map(([dataType, id, content]) => (
-            <div key={`${dataType}-${id}`} className="text-item">
-              <strong>{dataType} {id}:</strong> {content}
-            </div>
-          ))}
+          {flaskOutput.length === 0 ? (
+            <p>Loading...</p>
+          ) : Object.keys(flaskOutput).every(key => flaskOutput[key].length === 0) ? (
+            <p>No related information found!</p>
+          ) : (
+            flaskOutput.map(([dataType, id, content]) => (
+              <div key={`${dataType}-${id}`} className="text-item">
+                <strong>{dataType} {id}:</strong> {content}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
