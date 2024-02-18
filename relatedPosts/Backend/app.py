@@ -46,16 +46,21 @@ def view_existing_search():
 def view_RelationGraph():
     pid = request.json.get('selectedNumber')
     graph_data = {
-        "nodes": [
-            {"id": 1, "name": "Node 1"},
-            {"id": 2, "name": "Node 2"},
-            {"id": 3, "name": "Node 3"}
-        ],
-        "links": [
-            {"source": 1, "target": 2},
-            {"source": 2, "target": 3}
-        ]
-    }
+    "nodes": [
+        { 'id': "bob" },
+        { 'id': "alice" },
+        { 'id': "carol" },
+        { 'id': "mel" },
+        { 'id': "yan" }
+    ],
+    "links": [
+        { 'source': "bob", 'target': "carol", 'value': 4 },
+        { 'source': "alice", 'target': "carol", 'value': 3 },
+        { 'source': "alice", 'target': "yan", 'value': 1 },
+        { 'source': "carol", 'target': "mel", 'value': 6 },
+        { 'source': "carol", 'target': "yan", 'value': 1 },
+    ]
+}
     return jsonify({'output': graph_data})
 
 if __name__ == '__main__':

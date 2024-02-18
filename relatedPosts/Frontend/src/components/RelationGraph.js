@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import SankeyChart from './SankeyChart';
+import Sankey from './Sankey.tsx';
+import ReactDOM from "react-dom/client";
+
+const rootElement = document.getElementById("root");
 
 const RelationGraph = (props) => {
   const [selectedNumber, setSelectedNumber] = useState(1);
@@ -40,12 +43,9 @@ const RelationGraph = (props) => {
       <div>
         <br />
         <h2>Sankey Chart:</h2>
-        {
-        // JSON.stringify(flaskOutput)
-        flaskOutput && flaskOutput.links && (
-          <SankeyChart data={flaskOutput} />
-        )
-        }
+        { flaskOutput && flaskOutput.links && (
+          <Sankey width={400} height={400} data={flaskOutput} />
+        )}
       </div>
     </div>
   );
