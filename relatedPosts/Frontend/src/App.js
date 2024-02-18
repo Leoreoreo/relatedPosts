@@ -1,5 +1,6 @@
 import KeywordSearch from './components/KeywordSearch';
 import Navbar from './components/Navbar';
+import RelationGraph from './components/RelationGraph';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
@@ -13,6 +14,9 @@ function App() {
             <Route exact path="/KeywordSearch">
                <KeywordSearch url={url}/>
             </Route>
+            <Route exact path="/RelationGraph">
+               <RelationGraph url={url}/>
+            </Route> 
           </Switch>
         </div>
       </div>

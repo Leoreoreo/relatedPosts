@@ -108,9 +108,7 @@ const KeywordSearch = (props) => {
         <div className="text-container">
           {flaskOutput.length === 0 ? (
             <p>Loading...</p>
-          ) : Object.keys(flaskOutput).every(key => flaskOutput[key].length === 0) ? (
-            <p>No related information found!</p>
-          ) : (
+          ) :  (
             flaskOutput.map(([dataType, id, content]) => (
               <div key={`${dataType}-${id}`} className="text-item">
                 <strong>{dataType} {id}:</strong> {content}
