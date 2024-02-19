@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sankey from './Sankey.tsx';
-import ReactDOM from "react-dom/client";
 
 const rootElement = document.getElementById("root");
 
@@ -44,7 +43,7 @@ const RelationGraph = (props) => {
         <br />
         <h2>Sankey Chart:</h2>
         { flaskOutput && flaskOutput.links && (
-          <Sankey width={400} height={400} data={flaskOutput} />
+          <Sankey width={600} height={600} data={flaskOutput} />
         )}
       </div>
     </div>

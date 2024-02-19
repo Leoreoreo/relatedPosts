@@ -116,25 +116,4 @@ def decode_dic_to_list(dic, person_id):
   return res
 
 def decode_dic_to_dic(dic, person_id):
-  file_path = f"{PERSONAS_PATH}/persona{person_id}.json"
-  res = {'browsingHistoryList': []}
-  with open(file_path, 'r') as json_file:
-    data = json.load(json_file)['data']
-  
-    for bh in data['browsingHistoryList']:
-      if bh['id'] in dic['browsingHistoryList']:
-        res.append(['browsingHistoryList', bh['id'], bh['title']])
-
-    for pc in data['facebookPostsList']:
-      if pc['id'] in dic['facebookPostsList']:
-        res.append(['facebookPostsList', pc['id'], pc['content']])
-
-    for sch in data['schedule']:
-      if sch['id'] in dic['schedule']:
-        res.append(['schedule', sch['id'], sch['address']])
-
-    for info in data.keys():
-      if isinstance(data[info], str):
-        if info in dic['info']:
-          res.append(['profile', info, data[info]])
-  return res
+  pass
