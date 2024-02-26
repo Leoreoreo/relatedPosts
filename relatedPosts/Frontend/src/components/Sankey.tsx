@@ -130,6 +130,12 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
 
   // Draw the nodes
   const allNodes = nodes.map((node) => {
+    // Check if the node has incoming or outgoing links
+    const hasLinks = links.some(link => link.source === node || link.target === node);
+    
+    // If the node has no links, return null to skip rendering it
+    if (!hasLinks) return null;
+  
     const color = columnColors[node.column];
     const isHovered = 
       hoveredNode === node.id ||
@@ -139,7 +145,7 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
     const nodeSize = isHovered ? 15 : 0; 
     const opacity = isHovered || relatedClickedAttributes.has(node) ? 1 : .3; 
     const textSize = isHovered ? '20px' : '15px'; 
-
+  
     return (
       <g 
         key={node.index}
@@ -152,7 +158,6 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
           width={sankeyGenerator.nodeWidth() + nodeSize}
           x={node.x0 - nodeSize / 2}
           y={node.y0 - nodeSize / 2}
-          
           stroke={"white"}
           fill={color} // Use the assigned color
           fillOpacity={opacity}
@@ -178,7 +183,7 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
     const isRelatedLink = hoveredNode && 
       relatedHoverLinks.has(link) ||
       clickedKeywordLinks.has(link)
-    const strokeWidth = isRelatedLink ? 15 : 10;
+    const strokeWidth = isRelatedLink ? 10 : 5;
     const opacity = isRelatedLink ? 1 : .3;
 
     return (

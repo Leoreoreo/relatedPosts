@@ -115,5 +115,81 @@ def decode_dic_to_list(dic, person_id):
           res.append(['profile', info, data[info]])
   return res
 
-def decode_dic_to_dic(dic, person_id):
-  pass
+def create_sankey(person_id):
+  data = {
+    'nodes': [
+          # default ads
+          { 'id': 'ads1', 'name': 'Ad 1', 'column': 1 }, 
+          { 'id': 'ads2', 'name': 'Ad 2', 'column': 1 },
+          { 'id': 'ads3', 'name': 'Ad 3', 'column': 1 }, 
+          { 'id': 'ads4', 'name': 'Ad 4', 'column': 1 },
+
+    ],
+    'links': []
+  }
+
+  # add attributes nodes
+  persona_path = f"{PERSONAS_PATH}/persona1.json"
+  with open(persona_path, 'r') as persona_file:
+      persona_info = json.load(persona_file)['data']
+      for attribute in persona_info.keys():
+          if attribute == 'userId':
+            continue
+          data['nodes'].append({"id": f'attribute: {attribute}', "name": attribute, "column": 3})
+
+  # add keywords and links
+  for filename in os.listdir(RELATIONGRAPH_PATH):
+    pid = filename.split("_")[0]
+    keyword = filename.split("_")[1].split(".")[0]
+    
+    if pid == person_id:
+        # add keywords
+        kw_id = f'keyword: {keyword}'
+        data['nodes'].append({"id": kw_id, "name": keyword, "column": 2})
+        filepath = os.path.join(RELATIONGRAPH_PATH, filename)
+        
+        with open(filepath, "r") as file:
+            filedata = json.load(file)
+            if len(filedata['browsingHistoryList']) > 0:
+                data['links'].append({'source': kw_id, 'target': 'attribute: browsingHistoryList', 'value': 1})
+            if len(filedata['facebookPostsList']) > 0:
+                data['links'].append({'source': kw_id, 'target': 'attribute: facebookPostsList', 'value': 1})
+                data['links'].append({'source': kw_id, 'target': 'attribute: twitterPostsList', 'value': 1})
+            if len(filedata['schedule']) > 0:
+                data['links'].append({'source': kw_id, 'target': 'attribute: schedule', 'value': 1})
+            for attr in filedata['info']:
+                data['links'].append({'source': kw_id, 'target': f'attribute: {attr}', 'value': 1})
+
+  return data
+
+def get_sankey_data(person_id, keyword, attribute):
+  persona_path = f"{PERSONAS_PATH}/persona{person_id}.json"
+  relation_path = f"{RELATIONGRAPH_PATH}/{person_id}_{keyword}.json"
+  if attribute == 'twitterPostsList':
+    attribute = 'facebookPostsList' 
+  attributes_as_list = {'browsingHistoryList', 'facebookPostsList', 'schedule'}
+  res = []
+
+  with open(persona_path, 'r') as persona_file:
+    persona_info = json.load(persona_file)['data']
+
+    if attribute in attributes_as_list:
+      with open(relation_path, 'r') as relation_file:
+        relation_data = json.load(relation_file)
+
+        if attribute == 'browsingHistoryList':
+          for bh in persona_info['browsingHistoryList']:
+            if bh['id'] in relation_data['browsingHistoryList']:
+              res.append(['browsingHistoryList', bh['id'], bh['title']])
+        elif attribute == 'facebookPostsList':
+          for pc in persona_info['facebookPostsList']:
+            if pc['id'] in relation_data['facebookPostsList']:
+              res.append(['facebookPostsList', pc['id'], pc['content']])
+        elif attribute == 'schedule':
+          for sch in persona_info['schedule']:
+            if sch['id'] in relation_data['schedule']:
+              res.append(['schedule', sch['id'], sch['address']])
+
+    else:
+        res.append(['profile', 'info', persona_info[attribute]])
+  return res
