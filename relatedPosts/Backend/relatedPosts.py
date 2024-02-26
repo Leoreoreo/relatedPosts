@@ -129,7 +129,7 @@ def create_sankey(person_id):
   }
 
   # add attributes nodes
-  persona_path = f"{PERSONAS_PATH}/persona1.json"
+  persona_path = f"{PERSONAS_PATH}/persona{person_id}.json"
   with open(persona_path, 'r') as persona_file:
       persona_info = json.load(persona_file)['data']
       for attribute in persona_info.keys():
@@ -139,7 +139,7 @@ def create_sankey(person_id):
 
   # add keywords and links
   for filename in os.listdir(RELATIONGRAPH_PATH):
-    pid = filename.split("_")[0]
+    pid = int(filename.split("_")[0])
     keyword = filename.split("_")[1].split(".")[0]
     
     if pid == person_id:
@@ -147,7 +147,6 @@ def create_sankey(person_id):
         kw_id = f'keyword: {keyword}'
         data['nodes'].append({"id": kw_id, "name": keyword, "column": 2})
         filepath = os.path.join(RELATIONGRAPH_PATH, filename)
-        
         with open(filepath, "r") as file:
             filedata = json.load(file)
             if len(filedata['browsingHistoryList']) > 0:

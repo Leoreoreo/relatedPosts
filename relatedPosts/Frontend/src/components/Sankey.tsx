@@ -1,6 +1,7 @@
 
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from "d3-sankey";
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const MARGIN_Y = 30;
 const MARGIN_LEFT = 30;
@@ -16,9 +17,10 @@ type SankeyProps = {
   height: number;
   data: Data;
   personID: number; 
+  url: string;
 };
 
-const Sankey = ({ width, height, data, personID }: SankeyProps) => {
+const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [relatedHoverNodes, setRelatedHoverNodes] = useState<Set<string>>(new Set());
   const [relatedHoverLinks, setRelatedHoverLinks] = useState<Set<string>>(new Set());
@@ -26,8 +28,7 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
   const [clickedKeywordLinks, setClickedKeywordLinks] = useState<Set<string>>(new Set());
   const [relatedClickedAttributes, setRelatedClickedAttributes] = useState<Set<string>>(new Set());
   const [clickedAttribute, setClickedAttribute] = useState<string | null>(null);
-
-
+  const [fetchedData, setFetchedData] = useState<any[]>([]);
   const sankeyGenerator = (sankey() as any) // TODO: find how to type the sankey() function
     .nodeWidth(20)
     .nodePadding(20)
@@ -82,13 +83,28 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
     const linkedNodes = links.filter(link => link.source === target).map(link => link.target);
     return linkedNodes.some(node => isNodeRelated(source, node));
   };
+  const sendRequestToBackend = async () => {
+    try {
+      setFetchedData([]);
+      const response = await axios.post(url + '/RelationGraphData/', {
+        keyword: clickedKeyword,
+        attribute: clickedAttribute,
+        selectedNumber: personID
+      });
   
+      const data = response.data;
+      setFetchedData(data.output);
+      // Handle the response data as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   // Handler for mouse click event on a node
   const handleNodeClick = (nodeId: string) => {
     const clickedNode = nodes.find(node => node.id === nodeId);
     const clickedKeywordLinks = new Set<string>();
     const relatedClickedAttributes = new Set<string>();
-
+    setFetchedData([]);
     if (!clickedNode)  {
       setClickedKeyword(null); 
       setClickedAttribute(null);
@@ -208,19 +224,20 @@ const Sankey = ({ width, height, data, personID }: SankeyProps) => {
           {allLinks}
           {allNodes}
         </svg>
-        {clickedAttribute && (<div className="data-container">
-            {
-              <h3>{clickedKeyword}'s related data in {clickedAttribute}:</h3>
-            /* {flaskOutput.length === 0 ? (
-              <p>Loading...</p>
-            ) :  (
-              flaskOutput.map(([dataType, id, content]) => (
+        {clickedAttribute && (
+          <div className="data-container">
+            <h3>{clickedKeyword}</h3>
+            <h3>{clickedAttribute}</h3>
+            <br></br>
+            {fetchedData.length === 0 ? (
+              <button onClick={sendRequestToBackend}>Get Data</button>
+            ) : (
+              fetchedData.map(([dataType, id, content]) => (
                 <div key={`${dataType}-${id}`} className="text-item">
-                  <strong>{dataType} {id}:</strong> {content}
+                  {content}
                 </div>
               ))
-            )} */
-            }
+            )}
           </div>
         )}
       </div>

@@ -40,7 +40,7 @@ const RelationGraph = (props) => {
       <div>
         <br />
         { flaskOutput && flaskOutput.links && (
-          <Sankey width={800} height={800} data={flaskOutput} personID={selectedNumber} />
+          <Sankey width={800} height={800} data={flaskOutput} personID={selectedNumber} url={props.url}/>
         )}
       </div>
     </div>

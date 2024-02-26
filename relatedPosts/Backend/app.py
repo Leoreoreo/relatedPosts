@@ -45,17 +45,15 @@ def view_existing_search():
 @app.route("/RelationGraph/", methods=["POST"])
 def view_RelationGraph():
     pid = request.json.get('selectedNumber')
-
     graph_data = create_sankey(pid)
     return jsonify({'output': graph_data})
 
 @app.route("/RelationGraphData/", methods=["POST"])
-def view_RelationGraph():
+def view_RelationGraphData():
     pid = request.json.get('selectedNumber')
     kw = request.json.get('keyword')
     attr = request.json.get('attribute')
-
-    processed_output = get_sankey_data(pid, kw, attr)
+    processed_output = get_sankey_data(pid, kw.split()[1], attr.split()[1])
     return jsonify({'output': processed_output})
 
 if __name__ == '__main__':
