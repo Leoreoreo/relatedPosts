@@ -1,0 +1,10 @@
+.block {
+    background-color: var(--grey);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 17%;
+    border: 2px;
+    border-radius: 5px; 
+}

@@ -1,4 +1,5 @@
 import KeywordSearch from './components/KeywordSearch';
+import Block from './components/Block';
 import Navbar from './components/Navbar';
 import RelationGraph from './components/RelationGraph';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
@@ -8,6 +9,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Block />
         <Navbar />
         <div className="content">
           <Switch>

@@ -1,3 +1,4 @@
+import './KeywordSearch.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -98,12 +99,10 @@ const KeywordSearch = (props) => {
             </li>
           ))}
         </ul>
-        <br></br>
         <h2> OR... <button onClick={handleNewSearch}>Search Anyway</button></h2>
       </div>
       )}
       <div>
-        <br></br>
         <h2>Search Results:</h2>
         <div className="text-container">
           {flaskOutput.length === 0 ? (
