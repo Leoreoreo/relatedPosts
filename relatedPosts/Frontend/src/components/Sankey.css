@@ -1,0 +1,22 @@
+.svg-data-container {
+  border: 1.5px solid var(--shadow);
+  border-radius: 28px; 
+  background-color: var(--white); 
+  width: 40vw;
+  height: 60vh;
+  align-items: center;
+}
+
+.svg {
+  flex: 1;
+}
+
+
+.data-container {
+  width: 300px; /* Set a fixed width for the data container */
+  margin-left: 20px; /* Add some spacing between the SVG and the data container */
+  padding: 10px;
+  border: .5px;
+  border-radius: 4px;
+  box-shadow: 0px 5px 10px 0px var(--shadow);
+}

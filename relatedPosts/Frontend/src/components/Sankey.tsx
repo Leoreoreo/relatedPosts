@@ -1,11 +1,11 @@
-
+import './Sankey.css'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from "d3-sankey";
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const MARGIN_Y = 30;
-const MARGIN_LEFT = 30;
-const MARGIN_RIGHT = 100;
+const MARGIN_Y = 20;
+const MARGIN_LEFT = 20;
+const MARGIN_RIGHT = 70;
 
 type Data = {
   nodes: { id: string; column: number }[];
@@ -180,10 +180,10 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
           rx={2.9}
         />
         <text
-          x={node.x0 + 25} // Adjust position for text
+          x={node.x0-25} // Adjust position for text
           y={(node.y1 + node.y0) / 2 - 15} // Adjust position for text
           dy=".35em"
-          fill="white"
+          fill="black"
           style={{fontSize: textSize}} // Adjust font size if needed
         >
           {node.name}
@@ -224,23 +224,23 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
           {allLinks}
           {allNodes}
         </svg>
-        {clickedAttribute && (
-          <div className="data-container">
-            <h3>{clickedKeyword}</h3>
-            <h3>{clickedAttribute}</h3>
-            <br></br>
-            {fetchedData.length === 0 ? (
-              <button onClick={sendRequestToBackend}>Get Data</button>
-            ) : (
-              fetchedData.map(([dataType, id, content]) => (
-                <div key={`${dataType}-${id}`} className="text-item">
-                  {content}
-                </div>
-              ))
-            )}
-          </div>
-        )}
       </div>
+      {clickedAttribute && (
+        <div className="data-container">
+          <h3>{clickedKeyword}</h3>
+          <h3>{clickedAttribute}</h3>
+          <br></br>
+          {fetchedData.length === 0 ? (
+            <button onClick={sendRequestToBackend}>Get Data</button>
+          ) : (
+            fetchedData.map(([dataType, id, content]) => (
+              <div key={`${dataType}-${id}`} className="text-item">
+                {content}
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 };

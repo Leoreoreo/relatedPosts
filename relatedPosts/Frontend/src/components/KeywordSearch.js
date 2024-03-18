@@ -88,21 +88,21 @@ const KeywordSearch = (props) => {
           <button onClick={handleSendRequest}>Search</button>
         </div>
       </div>
-      {similarSearches.length > 0 && (
-      <div>
-        <h2>Similar Searches Found:</h2>
-        <ul className="similar-searches">
-          {similarSearches.map((search, index) => (
-            <li key={index}>
-              <button onClick={() => handleViewExistingSearch(search[0], search[1])}>View</button>
-              {`${search[1]}`}{' '}
-            </li>
-          ))}
-        </ul>
-        <h2> OR... <button onClick={handleNewSearch}>Search Anyway</button></h2>
-      </div>
-      )}
-      <div>
+      <div className="content">
+        {similarSearches.length > 0 && (
+        <div>
+          <h2>Similar Searches Found:</h2>
+          <ul className="similar-searches">
+            {similarSearches.map((search, index) => (
+              <li key={index}>
+                <button onClick={() => handleViewExistingSearch(search[0], search[1])}>View Keyword:</button>
+                {`${search[1]}`}{' '}
+              </li>
+            ))}
+          </ul>
+          <h2> OR... <button onClick={handleNewSearch}>Search Anyway</button></h2>
+        </div>
+        )}
         <h2>Search Results:</h2>
         <div className="text-container">
           {flaskOutput.length === 0 ? (

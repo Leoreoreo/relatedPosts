@@ -11,16 +11,14 @@ function App() {
       <div className="App">
         <Block />
         <Navbar />
-        <div className="content">
-          <Switch>
-            <Route exact path="/KeywordSearch">
-               <KeywordSearch url={url}/>
-            </Route>
-            <Route exact path="/RelationGraph">
-               <RelationGraph url={url}/>
-            </Route> 
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path="/KeywordSearch">
+              <KeywordSearch url={url}/>
+          </Route>
+          <Route exact path="/RelationGraph">
+              <RelationGraph url={url}/>
+          </Route> 
+        </Switch>
       </div>
     </Router>
   );
