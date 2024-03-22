@@ -3,7 +3,7 @@ import { sankey, sankeyCenter, sankeyLinkHorizontal } from "d3-sankey";
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const MARGIN_Y = 20;
+const MARGIN_Y = 5;
 const MARGIN_LEFT = 20;
 const MARGIN_RIGHT = 70;
 
@@ -29,9 +29,9 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
   const [relatedClickedAttributes, setRelatedClickedAttributes] = useState<Set<string>>(new Set());
   const [clickedAttribute, setClickedAttribute] = useState<string | null>(null);
   const [fetchedData, setFetchedData] = useState<any[]>([]);
-  const sankeyGenerator = (sankey() as any) // TODO: find how to type the sankey() function
-    .nodeWidth(20)
-    .nodePadding(20)
+  const sankeyGenerator = (sankey() as any)
+    .nodeWidth(80)
+    .nodePadding(15)
     .extent([
       [MARGIN_LEFT, MARGIN_Y],
       [width - MARGIN_RIGHT, height - MARGIN_Y],
@@ -41,14 +41,6 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
 
   // Compute nodes and links positions
   const { nodes, links } = sankeyGenerator(data);
-  const colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c'];
-  // Group nodes by column and assign colors to each group
-  const columnColors: { [key: number]: string } = {};
-  nodes.forEach(node => {
-    if (!columnColors[node.column]) {
-      columnColors[node.column] = colorPalette[node.column % colorPalette.length];
-    }
-  });
 
   // Handler for mouse enter event on a node
   const handleNodeMouseEnter = (nodeId: string) => {
@@ -152,15 +144,15 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
     // If the node has no links, return null to skip rendering it
     if (!hasLinks) return null;
   
-    const color = columnColors[node.column];
+    
     const isHovered = 
       hoveredNode === node.id ||
       clickedKeyword === node.id || 
       clickedAttribute === node.id || 
       relatedHoverNodes.has(node);
-    const nodeSize = isHovered ? 15 : 0; 
-    const opacity = isHovered || relatedClickedAttributes.has(node) ? 1 : .3; 
-    const textSize = isHovered ? '20px' : '15px'; 
+    const nodeSize = isHovered ? 25 : 15; 
+    const textSize = isHovered ? '15px' : '10px'; 
+    const color = isHovered ? 'grey' : 'white';
   
     return (
       <g 
@@ -174,17 +166,16 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
           width={sankeyGenerator.nodeWidth() + nodeSize}
           x={node.x0 - nodeSize / 2}
           y={node.y0 - nodeSize / 2}
-          stroke={"white"}
-          fill={color} // Use the assigned color
-          fillOpacity={opacity}
+          stroke={"black"}
+          fill={color} 
           rx={2.9}
         />
         <text
-          x={node.x0-25} // Adjust position for text
-          y={(node.y1 + node.y0) / 2 - 15} // Adjust position for text
-          dy=".35em"
+          x={node.x0 + (node.x1 - node.x0) / 2} 
+          y={(node.y1 + node.y0) / 2} 
+          dy=".25em"
           fill="black"
-          style={{fontSize: textSize}} // Adjust font size if needed
+          style={{fontSize: textSize, textAnchor: "middle"}}
         >
           {node.name}
         </text>
@@ -194,13 +185,12 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
 
   // Draw the links
   const allLinks = links.map((link, index) => {
-    const color = columnColors[link.source.column]; 
 
     const isRelatedLink = hoveredNode && 
       relatedHoverLinks.has(link) ||
       clickedKeywordLinks.has(link)
-    const strokeWidth = isRelatedLink ? 10 : 5;
-    const opacity = isRelatedLink ? 1 : .3;
+    const strokeWidth = isRelatedLink ? 5 : 2;
+    const opacity = isRelatedLink ? .6 : .3;
 
     return (
       <path
@@ -208,7 +198,7 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
         d={sankeyLinkHorizontal()(link)}
         style={{
           fill: 'none',
-          stroke: color,
+          stroke: "black",
           strokeWidth: strokeWidth,
           opacity: opacity,
         }}
@@ -231,7 +221,7 @@ const Sankey = ({ width, height, data, personID, url }: SankeyProps) => {
           <h3>{clickedAttribute}</h3>
           <br></br>
           {fetchedData.length === 0 ? (
-            <button onClick={sendRequestToBackend}>Get Data</button>
+            <button onClick={sendRequestToBackend}>Get Content</button>
           ) : (
             fetchedData.map(([dataType, id, content]) => (
               <div key={`${dataType}-${id}`} className="text-item">
