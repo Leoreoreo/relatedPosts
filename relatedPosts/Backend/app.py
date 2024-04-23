@@ -5,10 +5,6 @@ from relatedPosts import relevant_search, read_existed_search, decode_dic_to_lis
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
-def serve():
-    return "lol"
-
 
 @app.route("/KeywordSearch/", methods=["POST"])
 def process_input():
